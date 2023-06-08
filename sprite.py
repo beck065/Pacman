@@ -1,10 +1,12 @@
 # parent class for pac & ghosts
 class Sprite():
     def __init__(self, x_pos, y_pos):
-        self.__pos = [x_pos, y_pos]
-        self.__speed = [0, 0]
-        self.__acceleration = [0, 0]
+        self._pos = [x_pos, y_pos]
+        self._speed = [0, 0]
 
-    def update(self):
-        self.__speed += self.__acceleration 
-        self.__pos += self.__speed
+    def update(self): 
+        self._pos[0] += self._speed[0]
+        self._pos[1] += self._speed[1]
+
+    def get_position(self):
+        return self._pos[0], self._pos[1]

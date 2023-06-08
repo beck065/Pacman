@@ -19,7 +19,8 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        self.sprites.append(Pacman(x/2, y/2))
+        self.pac = Pacman(x/2, y/2)
+        self.sprites.append(self.pac)
         # add the ghosts
         
         self.draw()
@@ -48,31 +49,24 @@ class Game():
                     if event.key == pygame.K_DOWN:
                         self.key_down = not self.key_down
            
-           # pacman movement (could use something similar for ghosts?)
-            if self.penguin.moving == False:
-                if self.key_up and self.key_left:
-                    self.penguin.move_northwest()
-                elif self.key_up and self.key_right:
-                    self.penguin.move_northeast()
-                elif self.key_up:
-                    self.penguin.move_north()
-                elif self.key_down and self.key_left:
-                    self.penguin.move_southwest()
-                elif self.key_down and self.key_right:
-                    self.penguin.move_southeast()
-                elif self.key_down:
-                    self.penguin.move_south()
-                elif self.key_right:
-                    self.penguin.move_east()
-                elif self.key_left:
-                    self.penguin.move_west()
+            # pacman movement (could use something similar for ghosts?)
+            if self.key_up:
+                self.pac.move_north()
+            elif self.key_down:
+                self.pac.move_south()
+            elif self.key_right:
+                self.pac.move_east()
+            elif self.key_left:
+                self.pac.move_west()
             
             self.screen.fill((255, 255, 255))
-            self.screen.blit(pygame.image.load()) # sprite array
+
+            for sprite in self.sprites:
+                self.screen.blit(pygame.image.load(sprite.get_image()), sprite.get_position()) # sprite array
 
             pygame.display.flip()
             pygame.event.pump()
-            self.clock.tick(10)
+            self.clock.tick(15)
 
 if __name__ == '__main__':
     Game()
