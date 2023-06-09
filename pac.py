@@ -6,7 +6,7 @@ class Pacman(Sprite):
          self.__heading = "east"
          # loop of images in animation?
          self.__image =  "images/pac/"
-         self.__frame = 0
+         self.__frame = 2
          self.__heading = "e"
          self.__loop_flag = 1 # come up with a better name
          self.__moving = False
@@ -17,7 +17,8 @@ class Pacman(Sprite):
             self.__loop_flag = -1
         elif self.__frame == 1:
             self.__loop_flag = 1
-        self.__frame = self.__frame + 1 * self.__loop_flag
+        if self.__moving != False:
+            self.__frame = self.__frame + 1 * self.__loop_flag
 
         super().update()
 
@@ -28,17 +29,21 @@ class Pacman(Sprite):
         self.__moving = state
 
     def move_north(self):
+        self.__moving = True
         self.__heading = "n"
         self._speed = [0, -3]
     
     def move_south(self):
+        self.__moving = True
         self.__heading = "s"
         self._speed = [0, 3]
     
     def move_east(self):
+        self.__moving = True
         self.__heading = "e"
         self._speed = [3, 0]
     
     def move_west(self):
+        self.__moving = True
         self.__heading = "w"
         self._speed = [-3, 0]
