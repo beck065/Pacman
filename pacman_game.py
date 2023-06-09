@@ -22,7 +22,7 @@ class Game():
         self.pac = Pacman(x/2, y/2)
         self.sprites.append(self.pac)
         # add the ghosts
-        
+
         self.draw()
 
     def draw(self):
@@ -59,7 +59,8 @@ class Game():
             elif self.key_left:
                 self.pac.move_west()
             
-            self.screen.fill((255, 255, 255))
+            self.screen.fill('white')
+            self.draw_level()
 
             for sprite in self.sprites:
                 self.screen.blit(pygame.image.load(sprite.get_image()), sprite.get_position()) # sprite array
@@ -67,6 +68,9 @@ class Game():
             pygame.display.flip()
             pygame.event.pump()
             self.clock.tick(15)
+
+    def draw_level(self):
+        pass
 
 if __name__ == '__main__':
     Game()
