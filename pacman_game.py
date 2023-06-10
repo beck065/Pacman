@@ -19,7 +19,7 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        self.pac = Pacman(int(x/2)-10, int(y/2)+50, 16, 16)
+        self.pac = Pacman(int(x/2), int(y/2), 14, 14)
         self.sprites.append(self.pac)
         # add the ghosts
 
@@ -62,7 +62,6 @@ class Game():
             elif self.key_left:
                 self.pac.move_west()
             
-            self.screen.fill('white')
             self.draw_level()
 
             for sprite in self.sprites:
@@ -74,7 +73,7 @@ class Game():
 
     # draw the basic level, then all the items currently on the level
     def draw_level(self):
-        self.screen.blit(pygame.image.load("images/level1/level1_heatW.png"), (0, 0))
+        self.screen.blit(pygame.image.load("images/level1/level1_heat.png"), (0, 0))
 
 if __name__ == '__main__':
     Game()
