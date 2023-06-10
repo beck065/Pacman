@@ -6,8 +6,8 @@ class Game():
     def __init__(self):
         pygame.init()
 
-        x = 800
-        y = 600
+        x = 214
+        y = 251
         self.screen = pygame.display.set_mode((x, y))
         self.clock = pygame.time.Clock()
 
@@ -19,9 +19,12 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        self.pac = Pacman(x/2, y/2)
+        self.pac = Pacman(int(x/2)-10, int(y/2)+50, 16, 16)
         self.sprites.append(self.pac)
         # add the ghosts
+
+        # create the data for the level
+        self.heatmap = pygame.image.load("images/level1/level1_heat.png")
 
         self.draw()
 
@@ -30,7 +33,7 @@ class Game():
             # for loop on sprite array
             # update every sprite
             for sprite in self.sprites:
-                sprite.update()
+                sprite.update(self.heatmap)
 
             for event in pygame.event.get():
                 # accounts for holding a key
@@ -69,8 +72,9 @@ class Game():
             pygame.event.pump()
             self.clock.tick(15)
 
+    # draw the basic level, then all the items currently on the level
     def draw_level(self):
-        pass
+        self.screen.blit(pygame.image.load("images/level1/level1_heatW.png"), (0, 0))
 
 if __name__ == '__main__':
     Game()
