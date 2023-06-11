@@ -73,7 +73,7 @@ class Game():
 
     # draw the basic level, then all the items currently on the level
     def draw_level(self):
-        self.screen.blit(pygame.image.load("images/level1/level1_heat.png"), (0, 0))
+        self.screen.blit(pygame.image.load("images/level1/level1_base.png"), (0, 0))
 
 if __name__ == '__main__':
     Game()
