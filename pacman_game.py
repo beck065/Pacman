@@ -54,13 +54,13 @@ class Game():
            
             # pacman movement (could use something similar for ghosts?)
             if self.key_up:
-                self.pac.move_north()
+                self.pac.move_north(self.heatmap)
             elif self.key_down:
-                self.pac.move_south()
+                self.pac.move_south(self.heatmap)
             elif self.key_right:
-                self.pac.move_east()
+                self.pac.move_east(self.heatmap)
             elif self.key_left:
-                self.pac.move_west()
+                self.pac.move_west(self.heatmap)
             
             self.draw_level()
 

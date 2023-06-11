@@ -12,16 +12,12 @@ class Sprite():
         for i in range(4):
             if heatmap.get_at((self._pos[i][0] + self._speed[0], self._pos[i][1] + self._speed[1])) != pygame.Color(0, 0, 0, 0):
                 flags[i] = True
-                print("One flag is true.")
             else:
                 self._moving = False
                 self._speed = [0, 0]
-                print("One flag is false.")
                 break
-        print("Done.")
 
         if flags == [True, True, True, True]: # wtf am i doing??
-            print("All flags are true.")
             for pos in self._pos:
                 pos[0] += self._speed[0]
                 pos[1] += self._speed[1]
