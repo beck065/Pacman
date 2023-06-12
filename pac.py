@@ -24,11 +24,8 @@ class Pacman(Sprite):
 
 
         # change direction if needed
-        flags = [False, False, False, False]
-        for i in range(4):
-            if heatmap.get_at((self._pos[i][0] + self._speed[0], self._pos[i][1] + self._speed[1])) != pygame.Color(0, 0, 0, 0):
-                flags[i] = True
-            else:
+        for i in range(5):
+            if heatmap.get_at((self._pos[i][0] + self._speed[0], self._pos[i][1] + self._speed[1])) == pygame.Color(0, 0, 0, 0):
                 if self.__next_speed != None and self.__next_heading != None:
                     self.__heading = self.__next_heading
                     self._speed = self.__next_speed
@@ -45,65 +42,45 @@ class Pacman(Sprite):
         self._moving = state
 
     def move_north(self, heatmap):
-        flags = [False, False, False, False]
-        for i in range(4):
-            if heatmap.get_at((self._pos[i][0], self._pos[i][1] - 3)) != pygame.Color(0, 0, 0, 0):
-                flags[i] = True
-            else:
-                break
-
-        if flags == [True, True, True, True]:
-            self._moving = True
-            self.__heading = "n"
-            self._speed = [0, -3]
-        else:
-            self.__next_heading = "n"
-            self.__next_speed = [0, -3]
-    
+        for i in range(5):
+            if heatmap.get_at((self._pos[i][0], self._pos[i][1] - 3)) == pygame.Color(0, 0, 0, 0):
+                self.__next_heading = "n"
+                self.__next_speed = [0, -3]
+                return
+        
+        self._moving = True
+        self.__heading = "n"
+        self._speed = [0, -3]
+            
     def move_south(self, heatmap):
-        flags = [False, False, False, False]
-        for i in range(4):
-            if heatmap.get_at((self._pos[i][0], self._pos[i][1] + 3)) != pygame.Color(0, 0, 0, 0):
-                flags[i] = True
-            else:
-                break
-
-        if flags == [True, True, True, True]:
-            self._moving = True
-            self.__heading = "s"
-            self._speed = [0, 3]
-        else:
-            self.__next_heading = "s"
-            self.__next_speed = [0, 3]
+        for i in range(5):
+            if heatmap.get_at((self._pos[i][0], self._pos[i][1] + 3)) == pygame.Color(0, 0, 0, 0):
+                self.__next_heading = "s"
+                self.__next_speed = [0, 3]
+                return
+        
+        self._moving = True
+        self.__heading = "s"
+        self._speed = [0, 3]
     
     def move_east(self, heatmap):
-        flags = [False, False, False, False]
-        for i in range(4):
-            if heatmap.get_at((self._pos[i][0] + 3, self._pos[i][1])) != pygame.Color(0, 0, 0, 0):
-                flags[i] = True
-            else:
-                break
+        for i in range(5):
+            if heatmap.get_at((self._pos[i][0] + 3, self._pos[i][1])) == pygame.Color(0, 0, 0, 0):
+                self.__next_heading = "e"
+                self.__next_speed = [3, 0]
+                return
 
-        if flags == [True, True, True, True]:
-            self._moving = True
-            self.__heading = "e"
-            self._speed = [3, 0]
-        else:
-            self.__next_heading = "e"
-            self.__next_speed = [3, 0]
+        self._moving = True
+        self.__heading = "e"
+        self._speed = [3, 0]
     
     def move_west(self, heatmap):
-        flags = [False, False, False, False]
-        for i in range(4):
-            if heatmap.get_at((self._pos[i][0] - 3, self._pos[i][1])) != pygame.Color(0, 0, 0, 0):
-                flags[i] = True
-            else:
-                break
-
-        if flags == [True, True, True, True]:
-            self._moving = True
-            self.__heading = "w"
-            self._speed = [-3, 0]
-        else:
-            self.__next_heading = "w"
-            self.__next_speed = [-3, 0]
+        for i in range(5):
+            if heatmap.get_at((self._pos[i][0] - 3, self._pos[i][1])) == pygame.Color(0, 0, 0, 0):
+                self.__next_heading = "w"
+                self.__next_speed = [-3, 0]
+                return
+            
+        self._moving = True
+        self.__heading = "w"
+        self._speed = [-3, 0]

@@ -75,5 +75,11 @@ class Game():
     def draw_level(self):
         self.screen.blit(pygame.image.load("images/level1/level1_base.png"), (0, 0))
 
+        #for pellets and other collectablesS
+        #draw where they should be initalized on the heatmap,
+        # record thier posiiton into an array of all the collectables,
+        # when pman goes over that collectable, set that collectables flag to false
+        # only draw the collectables that have true flags
+
 if __name__ == '__main__':
     Game()
