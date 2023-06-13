@@ -99,5 +99,9 @@ class Pacman(Sprite):
         self.__power_mode = True
         # timer component to turn pman back?
 
+
     def get_power_mode(self):
         return self.__power_mode
+    
+    def end_power_mode(self):
+        self.__power_mode = False

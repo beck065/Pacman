@@ -28,6 +28,7 @@ class Game():
         
         self.dots = []
         self.pellets = []
+        self.pellet_timer = None
 
         self.init_level()
 
@@ -41,6 +42,14 @@ class Game():
             # update every sprite
             for sprite in self.sprites:
                 sprite.update(self.heatmap)
+
+            if self.pellet_timer != None and self.pellet_timer > 0:
+                self.pellet_timer -= self.clock.get_rawtime()
+            elif self.pellet_timer != None and self.pellet_timer <= 0:
+                self.pellet_timer = None
+                self.pac.end_power_mode()
+
+            print(self.pellet_timer)
 
             for event in pygame.event.get():
                 # accounts for holding a key
@@ -68,7 +77,9 @@ class Game():
                 self.pac.move_east(self.heatmap)
             elif self.key_left:
                 self.pac.move_west(self.heatmap)
-            
+
+            self.update_level()
+
             self.draw_level()
 
             for sprite in self.sprites:
@@ -112,16 +123,30 @@ class Game():
         # when pman goes over that collectable, set that collectables flag to false
         # only draw the collectables that have true flags
         for pellet in self.pellets:
-            if pellet.collected() != True:
+            if pellet.is_collected() != True:
                 self.screen.blit(pygame.image.load("images/items/power_pellet.png"), pellet.get_position())
 
         for dot in self.dots:
-            if dot.collected() != True:
+            if dot.is_collected() != True:
                 self.screen.blit(pygame.image.load("images/items/dot.png"), dot.get_position())
 
     def update_level(self):
-        return
+        # check pman's position
+        # is its on a white or black square, consume that item
+        for item in self.items:
+            # iterate through pman's position, check every position against
+            if self.pac.is_inside(item.get_position()):
+                pellet_timer = item.collect(self.pac)
+                if pellet_timer != None:
+                    self.pellet_timer = pellet_timer
 
+        flags = []
+        for dot in self.dots:
+            flags.append(dot.is_collected())
+
+        if all(flags):
+            pygame.quit()
+            sys.exit()
 
 if __name__ == '__main__':
     Game()

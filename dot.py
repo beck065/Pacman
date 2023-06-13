@@ -6,14 +6,3 @@ class Dot(Item):
 
     def collect(self, actor):
         super().collect()
-
-    def collected(self):
-        return super().collected()
-    
-    def collect(self):
-        super().collect()
-
-    def get_position(self):
-        return super().get_position()
-
-    

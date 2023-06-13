@@ -24,3 +24,11 @@ class Sprite():
 
     def get_position(self):
         return self._pos[0], self._pos[1]
+    
+    def is_inside(self, coords):
+        for x in range(self._width):
+            for y in range(self._height):
+                if self._pos[0] + x == coords[0] and self._pos[1] + y == coords[1]:
+                    return True
+                
+        return False
