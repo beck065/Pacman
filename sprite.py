@@ -8,6 +8,7 @@ class Sprite():
         self._moving = False
         self._width = width
         self._height = height
+        self._alive = True
 
     def update(self, heatmap):
         # every pixel in sprite to see if it can move
@@ -39,3 +40,18 @@ class Sprite():
                     return True
                 
         return False
+    
+    def get_width(self):
+        return self._width
+    
+    def get_height(self):
+        return self._height
+    
+    def is_alive(self):
+        return self._alive
+    
+    def kill(self):
+        self._alive = False
+
+    def revive(self):
+        self._alive = True

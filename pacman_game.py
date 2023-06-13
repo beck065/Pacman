@@ -21,7 +21,7 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        # add the ghosts
+        self.ghosts = []
 
         # create the data for the level
         self.heatmap = pygame.image.load("images/level1/level1_heat.png")
@@ -47,7 +47,9 @@ class Game():
                 self.pellet_timer -= self.clock.get_rawtime()
             elif self.pellet_timer != None and self.pellet_timer <= 0:
                 self.pellet_timer = None
-                self.pac.end_power_mode()
+                for ghost in self.ghosts:
+                    ghost.set_vulnerable(False)
+
 
             print(self.pellet_timer)
 
@@ -83,7 +85,8 @@ class Game():
             self.draw_level()
 
             for sprite in self.sprites:
-                self.screen.blit(pygame.image.load(sprite.get_image()), sprite.get_position()) # sprite array
+                if sprite.is_alive():
+                    self.screen.blit(pygame.image.load(sprite.get_image()), sprite.get_position()) # sprite array
 
             pygame.display.flip()
             pygame.event.pump()
@@ -102,10 +105,14 @@ class Game():
                     cur_pixel == pygame.Color(1, 1, 0, 255) or cur_pixel == pygame.Color(1, 0, 1, 255) or cur_pixel == pygame.Color(0, 1, 1, 255) or cur_pixel == pygame.Color(1, 1, 1, 255)):
                     self.dots.append(Dot(x, y))
                 if cur_pixel == pygame.Color(255, 255, 255, 255) or cur_pixel == pygame.Color(254, 255, 255, 255) or cur_pixel == pygame.Color(255, 254, 255, 255) or cur_pixel == pygame.Color(255, 255, 254, 255):
-                        self.pellets.append(Pellet(x, y))
+                    self.pellets.append(Pellet(x, y))
                 if cur_pixel == pygame.Color(255, 255, 0, 255):
-                        self.pac = Pacman(x, y, 14, 14)
-                        self.sprites.append(self.pac)
+                    self.pac = Pacman(x, y, 14, 14)
+                    self.sprites.append(self.pac)
+                if cur_pixel == pygame.Color(136, 136, 136, 255):
+                    self.blinky = Ghost(x, y, 14, 14)
+                    self.ghosts.append(self.blinky)
+                    self.sprites.append(self.blinky)
                 
                 if (debug):
                     if (self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(1, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 1, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 1, 0) and cur_pixel != pygame.Color(255, 255, 255, 255) and cur_pixel != pygame.Color(254, 255, 255, 255) and cur_pixel != pygame.Color(255, 254, 255, 255) and cur_pixel != pygame.Color(255, 255, 254, 255)
@@ -136,10 +143,25 @@ class Game():
         # is its on a white or black square, consume that item
         for item in self.items:
             # iterate through pman's position, check every position against
-            if self.pac.is_inside(item.get_position()):
-                pellet_timer = item.collect(self.pac)
+            if self.pac.is_inside(item.get_position()) and item.is_collected() == False:
+                pellet_timer = item.collect()
                 if pellet_timer != None:
                     self.pellet_timer = pellet_timer
+                    for ghost in self.ghosts:
+                        ghost.set_vulnerable(True)
+
+        for ghost in self.ghosts:
+            for x in range(ghost.get_width()):
+                for y in range(ghost.get_height()):
+                    cur_pos = ghost.get_position()
+                    if self.pac.is_inside((cur_pos[0] + x, cur_pos[1] + y)):
+                        if ghost.is_vulnerable() == True:
+                            # temporary fix, need to put them in time out array, after a certain amount of time, bring them back in to ghost array
+                            ghost.kill()
+                        else:
+                            # kill pac, end game
+                            pygame.quit()
+                            sys.exit()
 
         flags = []
         for dot in self.dots:
