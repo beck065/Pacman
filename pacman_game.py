@@ -6,8 +6,8 @@ class Game():
     def __init__(self):
         pygame.init()
 
-        x = 214
-        y = 251
+        x = 224
+        y = 256
         self.screen = pygame.display.set_mode((x, y))
         self.clock = pygame.time.Clock()
 
@@ -19,7 +19,7 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        self.pac = Pacman(int(x/2), int(y/2), 14, 14)
+        self.pac = Pacman(int(x/2), int(y/2)+13, 12, 12)
         self.sprites.append(self.pac)
         # add the ghosts
 
@@ -75,7 +75,7 @@ class Game():
     def draw_level(self):
         self.screen.blit(pygame.image.load("images/level1/level1_base.png"), (0, 0))
 
-        #for pellets and other collectablesS
+        #for pellets and other collectables
         #draw where they should be initalized on the heatmap,
         # record thier posiiton into an array of all the collectables,
         # when pman goes over that collectable, set that collectables flag to false
