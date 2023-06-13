@@ -18,6 +18,13 @@ class Sprite():
                     self._moving = False
                     self._speed = [0, 0]
                     return
+                if cur_pixel == pygame.Color(198, 0, 255, 255) or cur_pixel == pygame.Color(198, 0, 254, 255) or cur_pixel == pygame.Color(198, 1, 255, 255) or cur_pixel == pygame.Color(199, 0, 255, 255):
+                    if self._pos[0] + x + self._speed[0] <= 0:
+                        self._pos[0] = heatmap.get_width() - 1 - self._width
+                        return
+                    else:
+                        self._pos[0] = 0
+                        return
                 
         self._pos[0] += self._speed[0]
         self._pos[1] += self._speed[1]

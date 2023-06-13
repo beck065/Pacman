@@ -87,10 +87,10 @@ class Game():
 
             pygame.display.flip()
             pygame.event.pump()
-            self.clock.tick(15)
+            self.clock.tick(60)
 
     def init_level(self):
-        debug = False
+        debug = True
         # for black squares in heatmap, add a dot
         # for white squares in heatmap, add a pellet
         # place pacman where the yellow square is
@@ -104,12 +104,13 @@ class Game():
                 if cur_pixel == pygame.Color(255, 255, 255, 255) or cur_pixel == pygame.Color(254, 255, 255, 255) or cur_pixel == pygame.Color(255, 254, 255, 255) or cur_pixel == pygame.Color(255, 255, 254, 255):
                         self.pellets.append(Pellet(x, y))
                 if cur_pixel == pygame.Color(255, 255, 0, 255):
-                        self.pac = Pacman(x, y, 12, 12)
+                        self.pac = Pacman(x, y, 14, 14)
                         self.sprites.append(self.pac)
                 
                 if (debug):
                     if (self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(1, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 1, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 1, 0) and cur_pixel != pygame.Color(255, 255, 255, 255) and cur_pixel != pygame.Color(254, 255, 255, 255) and cur_pixel != pygame.Color(255, 254, 255, 255) and cur_pixel != pygame.Color(255, 255, 254, 255)
-                        and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 1, 255)):
+                        and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 1, 255)
+                        and cur_pixel != pygame.Color(198, 0, 255, 255) and cur_pixel != pygame.Color(198, 0, 254, 255) and cur_pixel != pygame.Color(198, 1, 255, 255) and cur_pixel != pygame.Color(199, 0, 255, 255)):
                         print(self.heatmap.get_at((x, y)))
                 
 
