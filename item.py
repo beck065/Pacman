@@ -4,7 +4,7 @@ class Item():
         self._y = y
         self._collected = False
 
-    def get_status(self):
+    def collected(self):
         return self._collected
     
     def collect(self):

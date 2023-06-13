@@ -26,7 +26,8 @@ class Pacman(Sprite):
         # change direction if needed
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x + self._speed[0], self._pos[1] + y + self._speed[1])) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x + self._speed[0], self._pos[1] + y + self._speed[1]))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     if self.__next_speed != None and self.__next_heading != None:
                         self.__heading = self.__next_heading
                         self._speed = self.__next_speed
@@ -45,7 +46,8 @@ class Pacman(Sprite):
     def move_north(self, heatmap):
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x + 0, self._pos[1] + y - 3)) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x + 0, self._pos[1] + y - 3))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     self.__next_heading = "n"
                     self.__next_speed = [0, -3]
                     return
@@ -57,7 +59,8 @@ class Pacman(Sprite):
     def move_south(self, heatmap):
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x + 0, self._pos[1] + y + 3)) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x + 0, self._pos[1] + y + 3))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     self.__next_heading = "s"
                     self.__next_speed = [0, 3]
                     return
@@ -69,7 +72,8 @@ class Pacman(Sprite):
     def move_east(self, heatmap):
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x + 3, self._pos[1] + y + 0)) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x + 3, self._pos[1] + y + 0))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     self.__next_heading = "e"
                     self.__next_speed = [3, 0]
                     return
@@ -81,7 +85,8 @@ class Pacman(Sprite):
     def move_west(self, heatmap):
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x - 3, self._pos[1] + y + 0)) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x - 3, self._pos[1] + y + 0))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     self.__next_heading = "w"
                     self.__next_speed = [-3, 0]
                     return

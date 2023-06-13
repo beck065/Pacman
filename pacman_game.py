@@ -31,6 +31,8 @@ class Game():
 
         self.init_level()
 
+        self.items = self.dots + self.pellets # use items to iterate through all items for drawing
+
         self.draw()
 
     def draw(self):
@@ -77,20 +79,28 @@ class Game():
             self.clock.tick(15)
 
     def init_level(self):
+        debug = False
         # for black squares in heatmap, add a dot
         # for white squares in heatmap, add a pellet
         # place pacman where the yellow square is
         # place ghosts where their corresponding color is
         for x in range(self.heatmap.get_width()):
             for y in range(self.heatmap.get_height()):
-                match self.heatmap.get_at((x, y)):
-                    case [pygame.Color(0, 0, 0, 255)]:
-                        self.dots.append(Dot(x, y))
-                    case [pygame.Color(255, 255, 255, 255)]:
+                cur_pixel = self.heatmap.get_at((x, y))
+                if (cur_pixel == pygame.Color(0, 0, 0, 255) or cur_pixel == pygame.Color(1, 0, 0, 255) or cur_pixel == pygame.Color(0, 1, 0, 255) or cur_pixel == pygame.Color(0, 0, 1, 255) or
+                    cur_pixel == pygame.Color(1, 1, 0, 255) or cur_pixel == pygame.Color(1, 0, 1, 255) or cur_pixel == pygame.Color(0, 1, 1, 255) or cur_pixel == pygame.Color(1, 1, 1, 255)):
+                    self.dots.append(Dot(x, y))
+                if cur_pixel == pygame.Color(255, 255, 255, 255) or cur_pixel == pygame.Color(254, 255, 255, 255) or cur_pixel == pygame.Color(255, 254, 255, 255) or cur_pixel == pygame.Color(255, 255, 254, 255):
                         self.pellets.append(Pellet(x, y))
-                    case [pygame.Color(255, 255, 0, 255)]:
+                if cur_pixel == pygame.Color(255, 255, 0, 255):
                         self.pac = Pacman(x, y, 12, 12)
                         self.sprites.append(self.pac)
+                
+                if (debug):
+                    if (self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(1, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 1, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 1, 0) and cur_pixel != pygame.Color(255, 255, 255, 255) and cur_pixel != pygame.Color(254, 255, 255, 255) and cur_pixel != pygame.Color(255, 254, 255, 255) and cur_pixel != pygame.Color(255, 255, 254, 255)
+                        and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 1, 255)):
+                        print(self.heatmap.get_at((x, y)))
+                
 
     # draw the basic level, then all the items currently on the level
     def draw_level(self):
@@ -102,11 +112,11 @@ class Game():
         # when pman goes over that collectable, set that collectables flag to false
         # only draw the collectables that have true flags
         for pellet in self.pellets:
-            if pellet.get_status() == True:
+            if pellet.collected() != True:
                 self.screen.blit(pygame.image.load("images/items/power_pellet.png"), pellet.get_position())
 
         for dot in self.dots:
-            if dot.get_status() == True:
+            if dot.collected() != True:
                 self.screen.blit(pygame.image.load("images/items/dot.png"), dot.get_position())
 
     def update_level(self):

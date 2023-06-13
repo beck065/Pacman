@@ -13,7 +13,8 @@ class Sprite():
         # every pixel in sprite to see if it can move
         for x in range(self._width):
             for y in range(self._height):
-                if heatmap.get_at((self._pos[0] + x + self._speed[0], self._pos[1] + y + self._speed[1])) == pygame.Color(0, 0, 0, 0):
+                cur_pixel = heatmap.get_at((self._pos[0] + x + self._speed[0], self._pos[1] + y + self._speed[1]))
+                if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                     self._moving = False
                     self._speed = [0, 0]
                     return
