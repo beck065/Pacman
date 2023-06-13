@@ -12,6 +12,7 @@ class Pacman(Sprite):
          self.__loop_flag = 1 # come up with a better name
          self.__next_heading = None
          self.__next_speed = None
+         self.__power_mode = False
     
     def update(self, heatmap):
         # open and close cycle
@@ -88,3 +89,10 @@ class Pacman(Sprite):
         self._moving = True
         self.__heading = "w"
         self._speed = [-3, 0]
+
+    def eat_pellet(self):
+        self.__power_mode = True
+        # timer component to turn pman back?
+
+    def get_power_mode(self):
+        return self.__power_mode

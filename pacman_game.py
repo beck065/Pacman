@@ -1,5 +1,7 @@
 from pac import Pacman
 from ghost import Ghost
+from dot import Dot
+from pellet import Pellet
 import pygame, sys
 
 class Game():
@@ -19,12 +21,15 @@ class Game():
         self.key_down = False
 
         self.sprites = []
-        self.pac = Pacman(int(x/2), int(y/2)+13, 12, 12)
-        self.sprites.append(self.pac)
         # add the ghosts
 
         # create the data for the level
         self.heatmap = pygame.image.load("images/level1/level1_heat.png")
+        
+        self.dots = []
+        self.pellets = []
+
+        self.init_level()
 
         self.draw()
 
@@ -71,6 +76,22 @@ class Game():
             pygame.event.pump()
             self.clock.tick(15)
 
+    def init_level(self):
+        # for black squares in heatmap, add a dot
+        # for white squares in heatmap, add a pellet
+        # place pacman where the yellow square is
+        # place ghosts where their corresponding color is
+        for x in range(self.heatmap.get_width()):
+            for y in range(self.heatmap.get_height()):
+                match self.heatmap.get_at((x, y)):
+                    case [pygame.Color(0, 0, 0, 255)]:
+                        self.dots.append(Dot(x, y))
+                    case [pygame.Color(255, 255, 255, 255)]:
+                        self.pellets.append(Pellet(x, y))
+                    case [pygame.Color(255, 255, 0, 255)]:
+                        self.pac = Pacman(x, y, 12, 12)
+                        self.sprites.append(self.pac)
+
     # draw the basic level, then all the items currently on the level
     def draw_level(self):
         self.screen.blit(pygame.image.load("images/level1/level1_base.png"), (0, 0))
@@ -80,6 +101,17 @@ class Game():
         # record thier posiiton into an array of all the collectables,
         # when pman goes over that collectable, set that collectables flag to false
         # only draw the collectables that have true flags
+        for pellet in self.pellets:
+            if pellet.get_status() == True:
+                self.screen.blit(pygame.image.load("images/items/power_pellet.png"), pellet.get_position())
+
+        for dot in self.dots:
+            if dot.get_status() == True:
+                self.screen.blit(pygame.image.load("images/items/dot.png"), dot.get_position())
+
+    def update_level(self):
+        return
+
 
 if __name__ == '__main__':
     Game()
