@@ -2,11 +2,14 @@ from pac import Pacman
 from ghost import Ghost
 from dot import Dot
 from pellet import Pellet
-import pygame, sys
+import pygame, sys, random
 
 class Game():
     def __init__(self):
         pygame.init()
+        random.seed()
+
+        self.debug = False
 
         x = 224
         y = 256
@@ -50,8 +53,8 @@ class Game():
                 for ghost in self.ghosts:
                     ghost.set_vulnerable(False)
 
-
-            print(self.pellet_timer)
+            if (self.debug):
+                print(self.pellet_timer)
 
             for event in pygame.event.get():
                 # accounts for holding a key
@@ -93,7 +96,6 @@ class Game():
             self.clock.tick(60)
 
     def init_level(self):
-        debug = True
         # for black squares in heatmap, add a dot
         # for white squares in heatmap, add a pellet
         # place pacman where the yellow square is
@@ -114,7 +116,7 @@ class Game():
                     self.ghosts.append(self.blinky)
                     self.sprites.append(self.blinky)
                 
-                if (debug):
+                if (self.debug):
                     if (self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(1, 0, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 1, 0, 0) and self.heatmap.get_at((x, y)) != pygame.Color(0, 0, 1, 0) and cur_pixel != pygame.Color(255, 255, 255, 255) and cur_pixel != pygame.Color(254, 255, 255, 255) and cur_pixel != pygame.Color(255, 254, 255, 255) and cur_pixel != pygame.Color(255, 255, 254, 255)
                         and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(255, 1, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 0, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 0, 1, 255) and self.heatmap.get_at((x, y)) != pygame.Color(254, 1, 1, 255)
                         and cur_pixel != pygame.Color(198, 0, 255, 255) and cur_pixel != pygame.Color(198, 0, 254, 255) and cur_pixel != pygame.Color(198, 1, 255, 255) and cur_pixel != pygame.Color(199, 0, 255, 255)):
@@ -156,7 +158,6 @@ class Game():
                     cur_pos = ghost.get_position()
                     if self.pac.is_inside((cur_pos[0] + x, cur_pos[1] + y)):
                         if ghost.is_vulnerable() == True:
-                            # temporary fix, need to put them in time out array, after a certain amount of time, bring them back in to ghost array
                             ghost.kill()
                         else:
                             # kill pac, end game

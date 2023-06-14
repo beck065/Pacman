@@ -6,4 +6,4 @@ class Pellet(Item):
 
     def collect(self):
         super().collect()
-        return 30 * 350
+        return 10000 # ~10 seconds

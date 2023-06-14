@@ -12,7 +12,6 @@ class Pacman(Sprite):
          self.__loop_flag = 1 # come up with a better name
          self.__next_heading = None
          self.__next_speed = None
-         self.__power_mode = False
     
     def update(self, heatmap):
         # open and close cycle
