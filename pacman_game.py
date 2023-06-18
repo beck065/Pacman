@@ -44,7 +44,10 @@ class Game():
             # for loop on sprite array
             # update every sprite
             for sprite in self.sprites:
-                sprite.update(self.heatmap)
+                if self.is_ghost(sprite):
+                    sprite.update(self.heatmap, self.pac.get_position())
+                else:
+                    sprite.update(self.heatmap)
 
             if self.pellet_timer != None and self.pellet_timer > 0:
                 self.pellet_timer -= self.clock.get_rawtime()
@@ -171,6 +174,13 @@ class Game():
         if all(flags):
             pygame.quit()
             sys.exit()
+
+    def is_ghost(self, sprite):
+        for ghost in self.ghosts:
+            if sprite == ghost:
+                return True
+            
+        return False
 
 if __name__ == '__main__':
     Game()
