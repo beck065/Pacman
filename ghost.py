@@ -67,9 +67,10 @@ class Ghost(Sprite):
             # probably need an outer loop for djikstra's
             # recursion??
             # need to think more
-            cur_pixel = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
-            cur_pixel_left = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
-            cur_pixel_right = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
+            cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+            cur_pixel_left = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+            cur_pixel_right = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+
             if (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0)):
                 self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
             elif (cur_pixel_right != pygame.Color(0, 0, 0, 0) or cur_pixel_right != pygame.Color(1, 0, 0, 0) or cur_pixel_right != pygame.Color(0, 1, 0, 0) or cur_pixel_right != pygame.Color(0, 0, 1, 0)):
@@ -81,10 +82,10 @@ class Ghost(Sprite):
         return direction_changes[0]
         
     def choose_direction_rec(self, heatmap, pac_pos, pos, speed):
-
-        cur_pixel = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
-        cur_pixel_left = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
-        cur_pixel_right = heatmap.get_at(pos[0] + speed[0], pos[1] + speed[1])
+        
+        cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+        cur_pixel_left = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+        cur_pixel_right = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
 
         if (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0)):
             self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
