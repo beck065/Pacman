@@ -43,30 +43,32 @@ class Ghost(Sprite):
                 break
 
     def choose_direction(self, heatmap, pac_pos):
-        # travel down the current path
-        # when a direction change is possible, take it and see where it goes
-        # add the direction to a queue of direction changes
-        # similar to dijkstra's algo, but only direction changes have weight
-
         pos = [self._pos[0], self._pos[1]]
         speed = [self._speed[0], self._speed[1]]
         direction_changes = None
 
-        while pos[0] != pac_pos[0] and pos[1] != pac_pos[1]:
-            # check all directions
-            # # can move 1 pixel if able to move left
+        cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+
+        # go until pac is found forward or wall it hit
+        while (pos[0] != pac_pos[0] and pos[1] != pac_pos[1] and 
+        (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0))):
+            # check only front left and right (not backwards!)
+            # can move 1 pixel if able to move left
             # can move 15 pixels if able to move right
             # can move 1 pixel if able to move up
             # can move 15 pixels if able to move down
-            # while not able to move any direction other than forward
-                # move forward
-                #else
-                # left and right (relative to forward)
-                # have them move backwards
-            
-            # probably need an outer loop for djikstra's
-            # recursion??
-            # need to think more
+
+            # 3 paths
+            # straight
+            # left (recursive)
+            # right (recursive)
+            # go stragith until left or right path open
+            # call recursive func on that path, return the path with the least amount of changes
+            # keep going straight until either the ghost reaches pac man (return an array with no direction changes)
+            # or hits a wall
+            # then return the direction changes array (with the least amount of changes)
+            # possible problem: path with the least amount of direction changes might not be the shortest path!
+
             cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
             cur_pixel_left = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
             cur_pixel_right = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
@@ -80,7 +82,8 @@ class Ghost(Sprite):
                 pos[1] += speed[1]
 
         return direction_changes[0]
-        
+    
+    # TODO
     def choose_direction_rec(self, heatmap, pac_pos, pos, speed):
         
         cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
