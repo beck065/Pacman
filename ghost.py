@@ -45,7 +45,23 @@ class Ghost(Sprite):
     def choose_direction(self, heatmap, pac_pos):
         pos = [self._pos[0], self._pos[1]]
         speed = [self._speed[0], self._speed[1]]
-        direction_changes = None
+        direction_changes = []
+        direction_changes_l = []
+        direction_changes_r = []
+
+        match (self.__heading):
+                case ["n"]:
+                    l_speed = [-1, 0, "w"]
+                    r_speed = [1, 0, "e"]
+                case ["e"]:
+                    l_speed = [0, -1, "n"]
+                    r_speed = [0, 1, "s"]
+                case ["s"]:
+                    l_speed = [1, 0, "e"]
+                    r_speed = [-1, 0, "w"]
+                case ["w"]:
+                    l_speed = [0, 1, "s"]
+                    r_speed = [0, -1, "n"]
 
         cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
 
@@ -62,38 +78,87 @@ class Ghost(Sprite):
             # straight
             # left (recursive)
             # right (recursive)
-            # go stragith until left or right path open
+            # go straight until left or right path open
             # call recursive func on that path, return the path with the least amount of changes
             # keep going straight until either the ghost reaches pac man (return an array with no direction changes)
             # or hits a wall
             # then return the direction changes array (with the least amount of changes)
             # possible problem: path with the least amount of direction changes might not be the shortest path!
-
+            
             cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
-            cur_pixel_left = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
-            cur_pixel_right = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+            cur_pixel_left = heatmap.get_at((pos[0] + l_speed[0], pos[1] + l_speed[1]))
+            cur_pixel_right = heatmap.get_at((pos[0] + r_speed[0], pos[1] + r_speed[1]))
 
             if (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0)):
-                self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
+                direction_changes_l.append(l_speed[2])
+                direction_changes_l = self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [l_speed[0], l_speed[1]], l_speed[2], direction_changes_l)
             elif (cur_pixel_right != pygame.Color(0, 0, 0, 0) or cur_pixel_right != pygame.Color(1, 0, 0, 0) or cur_pixel_right != pygame.Color(0, 1, 0, 0) or cur_pixel_right != pygame.Color(0, 0, 1, 0)):
-                self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
+                direction_changes_r.append(r_speed[2])
+                direction_changes_r = self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [r_speed[0], r_speed[1]], r_speed[2], direction_changes_r)
             elif (cur_pixel != pygame.Color(0, 0, 0, 0) or cur_pixel != pygame.Color(1, 0, 0, 0) or cur_pixel != pygame.Color(0, 1, 0, 0) or cur_pixel != pygame.Color(0, 0, 1, 0)):
                 pos[0] += speed[0]
                 pos[1] += speed[1]
 
-        return direction_changes[0]
+        # TODO return smallest direction changes
+        if pos[0] == pac_pos[0] and pos[1] == pac_pos[1]:
+            return None # no direction changes needed
+        # return the shorter of the two
+        elif direction_changes_l.__len__() < direction_changes_r.__len__():
+            return direction_changes_l
+        else:
+            return direction_changes_r
     
-    # TODO
-    def choose_direction_rec(self, heatmap, pac_pos, pos, speed):
-        
-        cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
-        cur_pixel_left = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
-        cur_pixel_right = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+    # these variable names suck
+    def choose_direction_rec(self, heatmap, pac_pos, pos, speed, heading, direction_changes_prev):
+        direction_changes = direction_changes_prev
+        direction_changes_l = []
+        direction_changes_r = []
 
-        if (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0)):
-            self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
-        elif (cur_pixel_right != pygame.Color(0, 0, 0, 0) or cur_pixel_right != pygame.Color(1, 0, 0, 0) or cur_pixel_right != pygame.Color(0, 1, 0, 0) or cur_pixel_right != pygame.Color(0, 0, 1, 0)):
-            self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [speed[0], speed[1]]) # TODO
-        elif (cur_pixel != pygame.Color(0, 0, 0, 0) or cur_pixel != pygame.Color(1, 0, 0, 0) or cur_pixel != pygame.Color(0, 1, 0, 0) or cur_pixel != pygame.Color(0, 0, 1, 0)):
-            pos[0] += speed[0]
-            pos[1] += speed[1]
+        match (heading):
+                case ["n"]:
+                    l_speed = [-1, 0, "w"]
+                    r_speed = [1, 0, "e"]
+                case ["e"]:
+                    l_speed = [0, -1, "n"]
+                    r_speed = [0, 1, "s"]
+                case ["s"]:
+                    l_speed = [1, 0, "e"]
+                    r_speed = [-1, 0, "w"]
+                case ["w"]:
+                    l_speed = [0, 1, "s"]
+                    r_speed = [0, -1, "n"]
+
+        cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+
+        while (pos[0] != pac_pos[0] and pos[1] != pac_pos[1] and 
+        (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0))):
+            cur_pixel = heatmap.get_at((pos[0] + speed[0], pos[1] + speed[1]))
+            cur_pixel_left = heatmap.get_at((pos[0] + l_speed[0], pos[1] + l_speed[1]))
+            cur_pixel_right = heatmap.get_at((pos[0] + r_speed[0], pos[1] + r_speed[1]))
+
+            if (cur_pixel_left != pygame.Color(0, 0, 0, 0) or cur_pixel_left != pygame.Color(1, 0, 0, 0) or cur_pixel_left != pygame.Color(0, 1, 0, 0) or cur_pixel_left != pygame.Color(0, 0, 1, 0)):
+                direction_changes_temp = []
+                direction_changes_temp.append(l_speed[2])
+                direction_changes_temp = self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [l_speed[0], l_speed[1]], l_speed[2], direction_changes)
+                # save the path if it is shorter
+                if direction_changes_l == [] or direction_changes_temp.__len__() < direction_changes_l.__len__():
+                    direction_changes_l = direction_changes_temp
+            elif (cur_pixel_right != pygame.Color(0, 0, 0, 0) or cur_pixel_right != pygame.Color(1, 0, 0, 0) or cur_pixel_right != pygame.Color(0, 1, 0, 0) or cur_pixel_right != pygame.Color(0, 0, 1, 0)):
+                direction_changes_temp = []
+                direction_changes_temp.append(l_speed[2])
+                direction_changes_temp = self.choose_direction_rec(heatmap, pac_pos, [pos[0], pos[1]], [r_speed[0], r_speed[1]], r_speed[2], direction_changes)
+                # save the path if it is shorter
+                if direction_changes_r == [] or direction_changes_temp.__len__() < direction_changes_r.__len__():
+                    direction_changes_r = direction_changes_temp
+            elif (cur_pixel != pygame.Color(0, 0, 0, 0) or cur_pixel != pygame.Color(1, 0, 0, 0) or cur_pixel != pygame.Color(0, 1, 0, 0) or cur_pixel != pygame.Color(0, 0, 1, 0)):
+                pos[0] += speed[0]
+                pos[1] += speed[1]
+
+        # TODO return smallest direction changes
+        if pos[0] == pac_pos[0] and pos[1] == pac_pos[1]:
+            return direction_changes # no direction changes needed
+        # return the shorter of the two
+        elif direction_changes_l.__len__() < direction_changes_r.__len__():
+            return direction_changes_l
+        else:
+            return direction_changes_r
