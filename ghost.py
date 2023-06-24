@@ -23,95 +23,72 @@ class Ghost(Sprite):
         return self.__vulnerable
     
     def update(self, heatmap, pac_pos):
-        self.__next_directions = self.choose_direction(heatmap, pac_pos)
+        if self._alive:
+            self._speed, self.__heading = self.choose_direction(heatmap, pac_pos)
+            print("moving to (" + str(self._pos[0] + self._speed[0]) + ", " + str(self._pos[1] + self._speed[1]) + ")")
+            print("heading: " + self.__heading)
 
-        if self.__next_directions != [] or self.__next_directions != None:
-            match self.__next_directions[0][2]:
-                case "e":
-                    offset = [13, 0]
-                case "s":
-                    offset = [0, 13]
-                case _:
-                    offset = [0, 0]
-
-            if self.check_direction(heatmap, self._pos, [self.__next_directions[0][0], self.__next_directions[0][1]], offset):
-                self.__heading = self.__next_directions[0][2]
-                self._speed = [self.__next_directions[0][0], self.__next_directions[0][1]]
-                self.__next_directions.pop(0)
-                super().update(heatmap)
-                return
-
-        super().update(heatmap)
+            super().update(heatmap)
 
     def choose_direction(self, heatmap, pac_pos):
         # start with pac_pos work its way back
         # travel towards pos, go around obsticals if needed
-        pos = [self._pos[0], self._pos[1]]
-        directions = []
-        while pos[0] != pac_pos[0] or pos[1] != pac_pos[1]: #?
-            if pos[1] - pac_pos[1] > 0:
-                while self.check_direction(heatmap, pos, [0, -1], [0, 0]) != True:
+        
+        # if vulnerable, do the opposite
+        if self._pos[0] != pac_pos[0] or self._pos[1] != pac_pos[1]: #?
+            if self._pos[1] - pac_pos[1] > 0:
+                if self.check_direction(heatmap, self._pos, [0, -1]) != True:
                     # move west
                     # update pos
-                    pos[0] -= 1
                     # add direction (if it changed)
-                    if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "w":
-                        directions.append([-1, 0, "w"])
+                    return [-1, 0], "w"
                 # move north
                 # update pos
-                pos[1] -= 1
                 # add direction (if it changed)
-                if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "n":
-                    directions.append([0, -1, "n"])
-            elif pos[1] - pac_pos[1] < 0:
-                while self.check_direction(heatmap, pos, [0, 1], [0, 13]) != True:
+                return [0, -1], "n"
+            elif self._pos[1] - pac_pos[1] < 0:
+                print("trying to move south")
+                if self.check_direction(heatmap, self._pos, [0, 1]) != True:
                     # move west
                     # update pos
-                    pos[0] -= 1
                     # add direction (if it changed)
-                    if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "w":
-                        directions.append([-1, 0, "w"])
+                    print("cannot move south, moving west around")
+                    return [-1, 0], "w"
                 # move south
                 # update pos
-                pos[1] += 1
                 # add direction (if it changed)
-                if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "s":
-                    directions.append([0, 1, "s"])
-            elif pos[0] - pac_pos[0] > 0:
-                while self.check_direction(heatmap, pos, [-1, 0], [0, 0]) != True:
+                print("can move south")
+                return [0, 1], "s"
+            elif self._pos[0] - pac_pos[0] > 0:
+                print("trying to move west")
+                if self.check_direction(heatmap, self._pos, [-1, 0]) != True:
                     # move north
                     # update pos
-                    pos[1] -= 1
                     # add direction (if it changed)
-                    if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "n":
-                        directions.append([0, -1, "n"])
+                    print("cannot move west, moving north around")
+                    return [0, -1], "n"
                 # move west
                 # update pos
-                pos[0] -= 1
                 # add direction (if it changed)
-                if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "w":
-                    directions.append([-1, 0, "w"])
-            elif pos[0] - pac_pos[0] < 0: 
-                while self.check_direction(heatmap, pos, [1, 0], [13, 0]) != True:
+                print("can move west")
+                return [-1, 0], "w"
+            elif self._pos[0] - pac_pos[0] < 0: 
+                if self.check_direction(heatmap, self._pos, [1, 0]) != True:
                     # move north
                     # update pos
-                    pos[1] -= 1
                     # add direction (if it changed)
-                    if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "n":
-                        directions.append([0, -1, "n"])
+                    return [0, -1], "n" 
                 # move east
                 # update pos
-                pos[0] += 1
                 # add direction (if it changed)
-                if directions.__len__() == 0 or directions[directions.__len__()-1][2] != "e":
-                    directions.append([1, 0, "e"])
-
-        return directions
+                return [1, 0], "e"
+            
+        return [], None
         
-    def check_direction(self, heatmap, pos, speed, offset):
+    def check_direction(self, heatmap, pos, speed):
         for x in range(self._width):
             for y in range(self._height):
-                cur_pixel = heatmap.get_at((pos[0] + x + speed[0] + offset[0], pos[1] + y + speed[1] + offset[1]))
+                cur_pixel = heatmap.get_at((pos[0] + x + speed[0], pos[1] + y + speed[1]))
                 if cur_pixel == pygame.Color(0, 0, 0, 0) or cur_pixel == pygame.Color(1, 0, 0, 0) or cur_pixel == pygame.Color(0, 1, 0, 0) or cur_pixel == pygame.Color(0, 0, 1, 0):
                         return False
         return True
