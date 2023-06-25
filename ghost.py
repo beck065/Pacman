@@ -9,6 +9,9 @@ class Ghost(Sprite):
         self.__vulnerable = False
         self._speed = [-1, 0]
         self._moving = True
+        # bad code mode
+        self.__move_x_around = False
+        self.__move_y_around = False
 
     def get_image(self):
         if self.__vulnerable == True:
@@ -37,14 +40,23 @@ class Ghost(Sprite):
         # if vulnerable, do the opposite
         if self._pos[0] != pac_pos[0] or self._pos[1] != pac_pos[1]: #?
             if self._pos[1] - pac_pos[1] > 0:
+                print("trying to move north")
                 if self.check_direction(heatmap, self._pos, [0, -1]) != True:
                     # move west
                     # update pos
                     # add direction (if it changed)
+                    print("cannot move north, moving west around")
+                    if self.check_direction(heatmap, self._pos, [-1, 0]) != True or self.__move_x_around != True:
+                        print("cannot move west around, move east around")
+                        self.__move_x_around = False
+                        return [1, 0], "e"
+                    print("can move west around")
+                    self.__move_x_around = True
                     return [-1, 0], "w"
                 # move north
                 # update pos
                 # add direction (if it changed)
+                print("can move north")
                 return [0, -1], "n"
             elif self._pos[1] - pac_pos[1] < 0:
                 print("trying to move south")
@@ -52,7 +64,13 @@ class Ghost(Sprite):
                     # move west
                     # update pos
                     # add direction (if it changed)
-                    print("cannot move south, moving west around")
+                    print("cannot move south, trying to move west around")
+                    if self.check_direction(heatmap, self._pos, [-1, 0]) != True or self.__move_x_around != True:
+                        print("cannot move west around, move east around")
+                        self.__move_x_around = False
+                        return [1, 0], "e"
+                    print("can move west around")
+                    self.__move_x_around = True
                     return [-1, 0], "w"
                 # move south
                 # update pos
@@ -65,7 +83,13 @@ class Ghost(Sprite):
                     # move north
                     # update pos
                     # add direction (if it changed)
-                    print("cannot move west, moving north around")
+                    print("cannot move west, trying to move north around")
+                    if self.check_direction(heatmap, self._pos, [0, -1]) != True or self.__move_y_around != True:
+                        print("cannot move north around, move south around")
+                        self.__move_y_around = False
+                        return[0, 1], "s"
+                    print("can move north around")
+                    self.__move_y_around = True
                     return [0, -1], "n"
                 # move west
                 # update pos
@@ -73,14 +97,23 @@ class Ghost(Sprite):
                 print("can move west")
                 return [-1, 0], "w"
             elif self._pos[0] - pac_pos[0] < 0: 
+                print("trying to move east")
                 if self.check_direction(heatmap, self._pos, [1, 0]) != True:
                     # move north
                     # update pos
                     # add direction (if it changed)
-                    return [0, -1], "n" 
+                    print("cannot move east, trying to move north around")
+                    if self.check_direction(heatmap, self._pos, [0, -1]) != True or self.__move_y_around != True:
+                        print("cannot move north around, move south around")
+                        self.__move_y_around = False
+                        return[0, 1], "s"
+                    print("can move north around")
+                    self.__move_y_around = True
+                    return [0, -1], "n"
                 # move east
                 # update pos
                 # add direction (if it changed)
+                print("can move east")
                 return [1, 0], "e"
             
         return [], None
